@@ -16,7 +16,7 @@ Establecer el marco de trabajo colaborativo, configurar la estructura base del r
    - Establecimiento del *Definition of Done* (DoD) del equipo.
 
 3. **Arquitectura del Proyecto**
-   - Organización de directorios en `src/` para mantener limpio el entorno de desarrollo.
+   - Organización de directorios en `src/` para mantener limpio el entorno de desarrollo. 
 
 ---
 
