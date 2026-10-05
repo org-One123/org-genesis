@@ -1,25 +1,47 @@
-name: Ejecutar Suma en Push
+name: Generar y Publicar Página Web
 
 on:
   push:
     branches:
-      - master  # Cambia por main si tu rama principal se llama main
+      - main
+      - develop
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 
 jobs:
-  ejecutar-suma:
+  build-and-deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Descarga el código del repositorio
       - name: Descargar repositorio
         uses: actions/checkout@v4
 
-      # 2. Configura el entorno de Python
       - name: Configurar Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
 
-      # 3. Ejecuta la función de suma
-      - name: Ejecutar script de suma
+      - name: Generar HTML con Python
         run: python src/suma.py
+
+      - name: Configurar GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Subir artefacto para Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Desplegar a GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
