@@ -1,0 +1,25 @@
+name: Ejecutar Suma en Push
+
+on:
+  push:
+    branches:
+      - master  # Cambia por main si tu rama principal se llama main
+
+jobs:
+  ejecutar-suma:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Descarga el código del repositorio
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+
+      # 2. Configura el entorno de Python
+      - name: Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      # 3. Ejecuta la función de suma
+      - name: Ejecutar script de suma
+        run: python src/suma.py
