@@ -4,30 +4,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Suma Interactiva</title>
+    <title>CyberCalc - Suma Gamer</title>
+    
+    <!-- Fuentes estilo Gaming / Sci-Fi -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+    
     <link rel="stylesheet" href="{% static 'app_calculadora/style.css' %}">
+    <link rel="stylesheet" href="{% static 'app_calculadora/style.css' %}?v=2">
 </head>
 <body>
+    <!-- Fondo cibernético -->
+    <div class="background-grid"></div>
+
     <div class="card">
-        <h1>Suma de 2 Números</h1>
+        <div class="card-header">
+            <span class="status-badge">// SYSTEM ONLINE</span>
+            <h1>CYBER CALC</h1>
+        </div>
         
         <form method="POST">
             {% csrf_token %}
             <div class="input-group">
-                <label for="num1">Primer número:</label>
-                <input type="number" id="num1" name="num1" placeholder="Ej: 15" value="{{ num1|default:'0' }}" step="any" required>
+                <label for="num1"><span>#01</span> PRIMER NÚMERO</label>
+                <input type="number" id="num1" name="num1" placeholder="00" value="{{ num1|default:'0' }}" step="any" required autocomplete="off">
             </div>
             
             <div class="input-group">
-                <label for="num2">Segundo número:</label>
-                <input type="number" id="num2" name="num2" placeholder="Ej: 25" value="{{ num2|default:'0' }}" step="any" required>
+                <label for="num2"><span>#02</span> SEGUNDO NÚMERO</label>
+                <input type="number" id="num2" name="num2" placeholder="00" value="{{ num2|default:'0' }}" step="any" required autocomplete="off">
             </div>
 
-            <button type="submit" id="btnSumar">Sumar</button>
+            <button type="submit" id="btnSumar" class="btn-gamer">
+                EJECUTAR SUMA
+            </button>
         </form>
 
         <div class="resultado-container">
-            <div class="resultado-label">Resultado:</div>
+            <div class="resultado-label">[OUTPUT] RESULTADO</div>
             <div id="resultado" class="resultado-valor">
                 {% if resultado is not None %}
                     {{ resultado }}
