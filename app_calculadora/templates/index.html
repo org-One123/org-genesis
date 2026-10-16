@@ -4,15 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CyberCalc - Suma Gamer</title>
+    <title>CyberCalc v2.0 - Demo en Vivo</title>
     
     <!-- Fuentes estilo Gaming / Sci-Fi -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="{% static 'app_calculadora/style.css' %}">
-    <link rel="stylesheet" href="{% static 'app_calculadora/style.css' %}?v=2">
+    <link rel="stylesheet" href="{% static 'app_calculadora/style.css' %}?v=3">
 </head>
 <body>
     <!-- Fondo cibernético -->
@@ -20,8 +19,8 @@
 
     <div class="card">
         <div class="card-header">
-            <span class="status-badge">// SYSTEM ONLINE</span>
-            <h1>CYBER CALC</h1>
+            <span class="status-badge">// LIVE DEMO - DEPLOY READY</span>
+            <h1>CYBER CALC v2</h1>
         </div>
         
         <form method="POST">
@@ -37,12 +36,12 @@
             </div>
 
             <button type="submit" id="btnSumar" class="btn-gamer">
-                EJECUTAR SUMA
+                ► CALCULAR SUMA
             </button>
         </form>
 
         <div class="resultado-container">
-            <div class="resultado-label">[OUTPUT] RESULTADO</div>
+            <div class="resultado-label">[OUTPUT] RESULTADO FINAL</div>
             <div id="resultado" class="resultado-valor">
                 {% if resultado is not None %}
                     {{ resultado }}
