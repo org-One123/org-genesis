@@ -37,7 +37,7 @@ ROOT_URLCONF = 'pr_calculadora.urls'
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.DjangoTemplates',
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',  # <-- Asegúrate de que tenga .django.DjangoTemplates
         'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {

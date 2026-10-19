@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CyberCalc v2.0 - Demo en Vivo</title>
+    <title>CyberCalc v2.0 - Geolocalización & Barcelona</title>
     
     <!-- Fuentes estilo Gaming / Sci-Fi -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,8 +14,8 @@
     <!-- Leaflet Maps CSS (CDN) -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
-    <!-- Estilos CSS locales -->
-    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=3">
+    <!-- Estilo CSS local único -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=5">
 </head>
 <body>
     <!-- Fondo cibernético -->
@@ -23,10 +23,11 @@
 
     <div class="card">
         <div class="card-header">
-            <span class="status-badge">// LIVE DEMO - DEPLOY READY</span>
+            <span class="status-badge">// SYSTEM ONLINE - BARCELONA GPS</span>
             <h1>CYBER CALC v2</h1>
         </div>
         
+        <!-- Calculadora -->
         <form method="POST">
             {% csrf_token %}
             <div class="input-group">
@@ -54,13 +55,40 @@
                 {% endif %}
             </div>
         </div>
+
+        <!-- Módulo de Mapa y Geolocalización -->
+        <div class="mapa-section">
+            <div class="input-group">
+                <label>📍 SELECCIONAR RUTA TURÍSTICA</label>
+                <select id="select-rutas">
+                    <!-- Se llena con mapa.js -->
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label>COORDENADA ORIGEN</label>
+                <input type="text" id="coord-origen" readonly>
+            </div>
+
+            <div class="input-group">
+                <label>COORDENADA DESTINO</label>
+                <input type="text" id="coord-destino" readonly>
+            </div>
+
+            <div class="btn-group">
+                <button type="button" id="btn-trazar-seleccion" class="btn-secundario">🗺️ TRAZAR RUTA</button>
+                <button type="button" id="btn-limpiar" class="btn-secundario">❌ LIMPIAR MAPA</button>
+            </div>
+
+            <!-- Contenedor donde se renderiza Leaflet -->
+            <div id="mapa"></div>
+        </div>
     </div>
 
     <!-- Leaflet Maps JS (CDN) -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-    <!-- Scripts locales (Apuntando a la carpeta /scripts/) -->
-    <script src="{% static 'scripts/script.js' %}"></script>
+    <!-- Scripts locales -->
     <script src="{% static 'scripts/mapa.js' %}"></script>
     <script src="{% static 'scripts/puntos_encuentro.js' %}"></script>
     <script src="{% static 'scripts/sismos_api.js' %}"></script>
