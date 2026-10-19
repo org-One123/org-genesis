@@ -4,8 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CyberCalc v2.0 - Geolocalización & Barcelona</title>
+    <title>CyberCalc v2.0 - Geolocalización & Multimedia</title>
     
+    <!-- Favicon del sistema -->
+    <link rel="icon" type="image/x-icon" href="{% static 'imagenes/sistemas/favicon.ico' %}">
+
     <!-- Fuentes estilo Gaming / Sci-Fi -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,7 +18,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
     <!-- Estilo CSS local único -->
-    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=5">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=6">
 </head>
 <body>
     <!-- Fondo cibernético -->
@@ -23,11 +26,14 @@
 
     <div class="card">
         <div class="card-header">
-            <span class="status-badge">// SYSTEM ONLINE - BARCELONA GPS</span>
+            <span class="status-badge">
+                <img src="{% static 'imagenes/iconos/2.svg' %}" alt="Icono" class="header-icon"> 
+                // SYSTEM ONLINE - MULTIMEDIA & GPS
+            </span>
             <h1>CYBER CALC v2</h1>
         </div>
         
-        <!-- Calculadora -->
+        <!-- Módulo de Calculadora -->
         <form method="POST">
             {% csrf_token %}
             <div class="input-group">
@@ -80,8 +86,30 @@
                 <button type="button" id="btn-limpiar" class="btn-secundario">❌ LIMPIAR MAPA</button>
             </div>
 
-            <!-- Contenedor donde se renderiza Leaflet -->
+            <!-- Contenedor del Mapa -->
             <div id="mapa"></div>
+        </div>
+
+        <!-- Galería de Imágenes -->
+        <!-- Galería de Imágenes -->
+        <div class="media-section">
+            <div class="section-title">🖼️ GALERÍA DE IMÁGENES</div>
+            <div class="media-grid">
+                <img src="{% static 'imagenes/fotos/4.jpg' %}" alt="Foto 4" class="media-img">
+                <img src="{% static 'imagenes/sistemas/8.jpg' %}" alt="Foto 8" class="media-img">
+                <img src="{% static 'imagenes/fotos/6.jpg' %}" alt="Foto 6" class="media-img">
+                <img src="{% static 'imagenes/fotos/7.jpg' %}" alt="Foto 7" class="media-img">
+            </div>
+        </div>
+        <!-- Sección de Videos -->
+        <div class="media-section">
+            <div class="section-title">🎬 VIDEOS DEMOSTRATIVOS</div>
+            <div class="video-container">
+                <video controls preload="metadata">
+                    <source src="{% static 'videos/clips/KOCMOC UNLEASHED.mp4' %}" type="video/mp4">
+                    Tu navegador no soporta el reproductor de video.
+                </video>
+            </div>
         </div>
     </div>
 
