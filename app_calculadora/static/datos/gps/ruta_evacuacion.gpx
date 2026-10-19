@@ -1,0 +1,178 @@
+window.mapa = L.map('mapa').setView([2.4448, -76.6147], 16);
+
+// Capa base de Esri
+L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+    maxZoom: 19,
+    attribution: 'Tiles &copy; Esri'
+}).addTo(window.mapa);
+
+// Capas de dibujo independientes
+let capaRutaActual = L.layerGroup().addTo(window.mapa);
+let capaSismos = L.layerGroup().addTo(window.mapa);
+let marcadorUsuario = null;
+
+// Ruta del archivo GPX en Django
+const URL_GPX = '/static/datos/gps/ruta_evacuacion.gpx';
+
+// Cargar dinámicamente las coordenadas iniciales y el selector al abrir la página
+document.addEventListener('DOMContentLoaded', () => {
+    inicializarDesdeGPX();
+});
+
+function inicializarDesdeGPX() {
+    fetch(URL_GPX)
+        .then(res => {
+            if (!res.ok) throw new Error("No se pudo cargar el archivo GPX desde static");
+            return res.text();
+        })
+        .then(gpxString => {
+            const parser = new DOMParser();
+            const xmlDoc = parser.parseFromString(gpxString, "text/xml");
+
+            const waypoints = xmlDoc.getElementsByTagName("wpt");
+            const trackpoints = xmlDoc.getElementsByTagName("trkpt");
+
+            // 1. Rellenar cajas de texto de Origen y Destino con el primer y último punto del track
+            if (trackpoints.length > 0) {
+                const pInicio = trackpoints[0];
+                const pFin = trackpoints[trackpoints.length - 1];
+
+                const inputOrigen = document.getElementById('coord-origen');
+                const inputDestino = document.getElementById('coord-destino');
+
+                if (inputOrigen) inputOrigen.value = `${pInicio.getAttribute("lat")}, ${pInicio.getAttribute("lon")}`;
+                if (inputDestino) inputDestino.value = `${pFin.getAttribute("lat")}, ${pFin.getAttribute("lon")}`;
+            }
+
+            // 2. Rellenar el selector dinámicamente con los Waypoints (<wpt>) del GPX
+            const selector = document.getElementById('select-rutas');
+            if (selector && waypoints.length > 0) {
+                selector.innerHTML = '';
+                Array.from(waypoints).forEach((wpt, index) => {
+                    const lat = wpt.getAttribute("lat");
+                    const lon = wpt.getAttribute("lon");
+                    const nombre = wpt.getElementsByTagName("name")[0]?.textContent || `Punto ${index + 1}`;
+
+                    const option = document.createElement('option');
+                    option.value = `${lat},${lon}`;
+                    option.textContent = `[GPX] ${nombre}`;
+                    selector.appendChild(option);
+                });
+            }
+        })
+        .catch(err => console.error("Error al inicializar GPX:", err));
+}
+
+// Botón "Trazar Ruta en el Mapa" (Dibuja la línea leyendo <trkpt>)
+document.getElementById('btn-trazar-seleccion')?.addEventListener('click', function() {
+    capaRutaActual.clearLayers();
+
+    fetch(URL_GPX)
+        .then(res => res.text())
+        .then(gpxString => {
+            const parser = new DOMParser();
+            const xmlDoc = parser.parseFromString(gpxString, "text/xml");
+            const trackpoints = xmlDoc.getElementsByTagName("trkpt");
+
+            let coordenadas = [];
+            Array.from(trackpoints).forEach(pt => {
+                const lat = parseFloat(pt.getAttribute("lat"));
+                const lon = parseFloat(pt.getAttribute("lon"));
+                if (!isNaN(lat) && !isNaN(lon)) {
+                    coordenadas.push([lat, lon]);
+                }
+            });
+
+            if (coordenadas.length > 0) {
+                const linea = L.polyline(coordenadas, {
+                    color: '#10b981',
+                    weight: 5,
+                    opacity: 0.9,
+                    dashArray: '6, 8'
+                }).addTo(capaRutaActual);
+
+                L.marker(coordenadas[0]).bindPopup("<b>Origen</b>").addTo(capaRutaActual);
+                L.marker(coordenadas[coordenadas.length - 1]).bindPopup("<b>Destino</b>").addTo(capaRutaActual);
+
+                window.mapa.fitBounds(linea.getBounds(), { padding: [50, 50] });
+            }
+        });
+});
+
+// Botón "Mostrar Puntos de Sismo" (Lee los <wpt> y los muestra en el mapa)
+document.getElementById('btn-sismos')?.addEventListener('click', function() {
+    const estadoSismos = document.getElementById('estado-sismos');
+    if (estadoSismos) estadoSismos.textContent = 'Leyendo puntos desde ruta_evacuacion.gpx...';
+
+    capaSismos.clearLayers();
+
+    fetch(URL_GPX)
+        .then(res => res.text())
+        .then(gpxString => {
+            const parser = new DOMParser();
+            const xmlDoc = parser.parseFromString(gpxString, "text/xml");
+            const waypoints = xmlDoc.getElementsByTagName("wpt");
+
+            let grupoPuntos = L.featureGroup();
+            let contador = 0;
+
+            Array.from(waypoints).forEach(wpt => {
+                const lat = parseFloat(wpt.getAttribute("lat"));
+                const lon = parseFloat(wpt.getAttribute("lon"));
+                const nombre = wpt.getElementsByTagName("name")[0]?.textContent || "Punto de Evacuación";
+                const desc = wpt.getElementsByTagName("desc")[0]?.textContent || "Punto de encuentro";
+
+                if (!isNaN(lat) && !isNaN(lon)) {
+                    contador++;
+                    const marcador = L.circleMarker([lat, lon], {
+                        radius: 8,
+                        fillColor: "#ef4444",
+                        color: "#ffffff",
+                        weight: 2,
+                        fillOpacity: 0.9
+                    }).bindPopup(`<b>⚠️ ${nombre}</b><br>${desc}<br><small>Lat/Lon: ${lat}, ${lon}</small>`);
+
+                    marcador.addTo(capaSismos);
+                    grupoPuntos.addLayer(marcador);
+                }
+            });
+
+            if (grupoPuntos.getLayers().length > 0) {
+                window.mapa.fitBounds(grupoPuntos.getBounds(), { padding: [50, 50] });
+            }
+
+            if (estadoSismos) {
+                estadoSismos.textContent = `✔ Se cargaron ${contador} puntos dinámicamente desde el archivo GPX.`;
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            if (estadoSismos) estadoSismos.textContent = '❌ Error al leer el archivo GPX.';
+        });
+});
+
+// Botón "Limpiar Mapa"
+document.getElementById('btn-limpiar')?.addEventListener('click', function() {
+    capaRutaActual.clearLayers();
+    capaSismos.clearLayers();
+    const estadoSismos = document.getElementById('estado-sismos');
+    if (estadoSismos) estadoSismos.textContent = '';
+});
+
+// Geolocalización del usuario
+if ("geolocation" in navigator) {
+    navigator.geolocation.getCurrentPosition(
+        (pos) => {
+            const lat = pos.coords.latitude;
+            const lng = pos.coords.longitude;
+            if (marcadorUsuario) {
+                marcadorUsuario.setLatLng([lat, lng]);
+            } else {
+                marcadorUsuario = L.marker([lat, lng])
+                    .addTo(window.mapa)
+                    .bindPopup("<b>Tu ubicación actual</b>");
+            }
+        },
+        (err) => console.warn("Geolocalización omitida:", err.message)
+    );
+}

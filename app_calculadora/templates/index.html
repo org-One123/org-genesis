@@ -11,7 +11,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="{% static 'app_calculadora/style.css' %}?v=3">
+    <!-- Leaflet Maps CSS (CDN) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <!-- Estilos CSS locales -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=3">
 </head>
 <body>
     <!-- Fondo cibernético -->
@@ -52,6 +56,14 @@
         </div>
     </div>
 
-    <script src="{% static 'app_calculadora/script.js' %}"></script>
+    <!-- Leaflet Maps JS (CDN) -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- Scripts locales (Apuntando a la carpeta /scripts/) -->
+    <script src="{% static 'scripts/script.js' %}"></script>
+    <script src="{% static 'scripts/mapa.js' %}"></script>
+    <script src="{% static 'scripts/puntos_encuentro.js' %}"></script>
+    <script src="{% static 'scripts/sismos_api.js' %}"></script>
+    <script src="{% static 'scripts/tabla_csv.js' %}"></script>
 </body>
 </html>

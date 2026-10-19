@@ -1,0 +1,14 @@
+[
+  {
+    "nombre": "Punto de Encuentro 1 - Cancha Principal",
+    "descripcion": "Zona verde junto a la entrada",
+    "lat": 2.4448,
+    "lng": -76.6147
+  },
+  {
+    "nombre": "Punto de Encuentro 2 - Parqueadero",
+    "descripcion": "Área descubierta vehicular",
+    "lat": 2.4455,
+    "lng": -76.6138
+  }
+]

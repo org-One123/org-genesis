@@ -1,0 +1,17 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "nombre": "Ruta Principal de Evacuación" },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-76.6147, 2.4448],
+          [-76.6138, 2.4452],
+          [-76.6125, 2.4460]
+        ]
+      }
+    }
+  ]
+}
